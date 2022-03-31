@@ -54,6 +54,12 @@ public struct CompletionRingsView: View {
     public let ringThickness: CGFloat
     public let ringSpacing: CGFloat
     
+    public init(rings: [Ring], ringThickness: CGFloat, ringSpacing: CGFloat) {
+        self.rings = rings
+        self.ringThickness = ringThickness
+        self.ringSpacing = ringSpacing
+    }
+    
     public var body: some View {
         ZStack {
             ForEachWithIndex(rings, id: \.id) { ring, index in
