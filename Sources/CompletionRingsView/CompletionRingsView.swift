@@ -6,7 +6,7 @@
 import SwiftUI
 
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct Ring: Equatable {
+public struct Ring: Equatable {
     /// A value of 1.0 represents 100% complete; may be > 100%
     var completion: CGFloat
     let startColor: CGColor
@@ -31,7 +31,7 @@ struct Ring: Equatable {
 
 /// Draws a single completion ring
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct CompletionRingView: View {
+public struct CompletionRingView: View {
     let ring: Ring
     let ringThickness: CGFloat?
     
@@ -40,7 +40,7 @@ struct CompletionRingView: View {
         self.ringThickness = ringThickness
     }
     
-    var body: some View {
+    public var body: some View {
         Rectangle()
             .foregroundColor(.clear)
             .modifier(CompletionRingViewModifier(ring: ring, ringThickness: ringThickness))
@@ -49,12 +49,12 @@ struct CompletionRingView: View {
 
 /// Draws nested completion rings
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct CompletionRingsView: View {
+public struct CompletionRingsView: View {
     let rings: [Ring]
     let ringThickness: CGFloat
     let ringSpacing: CGFloat
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             ForEachWithIndex(rings, id: \.id) { ring, index in
                 CompletionRingView(ring: ring, ringThickness: ringThickness)
