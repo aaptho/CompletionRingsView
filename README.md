@@ -2,6 +2,9 @@
 
 A pure SwiftUI View that renders one or more circular completion indicators, which can go past 100%
 
+![example screenshot](https://user-images.githubusercontent.com/6288076/160998657-7ff1d545-2659-45c7-9fa8-c8a45c369011.png)
+
+
 ## Example Usage
 
 ```
