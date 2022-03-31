@@ -6,17 +6,17 @@
 import SwiftUI
 
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct Ring: Equatable {
+public struct Ring: Equatable {
     /// A value of 1.0 represents 100% complete; may be > 100%
-    var completion: CGFloat
-    let startColor: CGColor
-    let endColor: CGColor
+    public var completion: CGFloat
+    public let startColor: CGColor
+    public let endColor: CGColor
     /// (Optional) An icon to be displayed at the top-middle of this ring
-    let icon: Image?
+    public let icon: Image?
     
     fileprivate let id = UUID()
     
-    init(
+    public init(
         completion: CGFloat,
         startColor: CGColor,
         endColor: CGColor,
@@ -31,16 +31,16 @@ struct Ring: Equatable {
 
 /// Draws a single completion ring
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct CompletionRingView: View {
-    let ring: Ring
-    let ringThickness: CGFloat?
+public struct CompletionRingView: View {
+    public let ring: Ring
+    public let ringThickness: CGFloat?
     
-    init(ring: Ring, ringThickness: CGFloat? = nil) {
+    public init(ring: Ring, ringThickness: CGFloat? = nil) {
         self.ring = ring
         self.ringThickness = ringThickness
     }
     
-    var body: some View {
+    public var body: some View {
         Rectangle()
             .foregroundColor(.clear)
             .modifier(CompletionRingViewModifier(ring: ring, ringThickness: ringThickness))
@@ -49,12 +49,12 @@ struct CompletionRingView: View {
 
 /// Draws nested completion rings
 @available(macCatalyst 15.0, iOS 15.0, *)
-struct CompletionRingsView: View {
-    let rings: [Ring]
-    let ringThickness: CGFloat
-    let ringSpacing: CGFloat
+public struct CompletionRingsView: View {
+    public let rings: [Ring]
+    public let ringThickness: CGFloat
+    public let ringSpacing: CGFloat
     
-    var body: some View {
+    public var body: some View {
         ZStack {
             ForEachWithIndex(rings, id: \.id) { ring, index in
                 CompletionRingView(ring: ring, ringThickness: ringThickness)
