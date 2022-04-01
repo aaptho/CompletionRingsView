@@ -7,7 +7,7 @@ A pure SwiftUI View that renders one or more circular completion indicators, whi
 
 ## Example Usage
 
-```
+```swift
 struct SingleRingPreview: View {
     let ring = Ring(
         completion: 0.5,
