@@ -81,18 +81,18 @@ private struct InnerCompletionRingView: View {
     }
     
     var body: some View {
-        let completion = ring.completion
-        let startColor = ring.startColor
-        let endColor = ring.endColor
-        
         // There is an aliasing artifact where the start and end caps meet the ring,
         // so back it up by this small amount to avoid this gap
         let capAliasingCoverup = Angle(radians: 0.006)
         
-        let startAngle = -capAliasingCoverup
-        let endAngle = Angle(degrees: max(0, completion * 360.0))
+        let completion = max(0, ring.completion) + capAliasingCoverup.degrees / 360
+        let startColor = ring.startColor
+        let endColor = ring.endColor
         
-        let wrappedEndAngle = Angle(degrees: CGFloat(fmod(endAngle.degrees + 0.06, 360)))
+        let startAngle = Angle.zero
+        let endAngle = Angle(degrees: completion * 360.0)
+        
+        let wrappedEndAngle = Angle(degrees: CGFloat(fmod(endAngle.degrees, 360)))
         let baseGradientStartColor = Color(endAngle.degrees < 720 ? startColor : endColor)
         let endCapColor = Color(CGColor.lerp(from: startColor, to: endColor, value: 1 - endAngle.degrees / 360))
         
@@ -115,7 +115,7 @@ private struct InnerCompletionRingView: View {
             let endCapShadowRadius: CGFloat = halfRingThickness / 4
             
             // Base track
-            Circle().stroke(Color(startColor).opacity(0.18), lineWidth: ringThickness).padding(halfRingThickness)
+            Circle().stroke(Color(startColor).opacity(0.25), lineWidth: ringThickness).padding(halfRingThickness)
             
             // Start cap
             Path { path in
@@ -159,7 +159,7 @@ private struct InnerCompletionRingView: View {
                     path.addArc(
                         center: geometry.center,
                         radius: radius,
-                        startAngle: startAngle - .degrees(0.2),
+                        startAngle: startAngle - capAliasingCoverup,
                         endAngle: wrappedEndAngle,
                         clockwise: false
                     )
@@ -201,7 +201,7 @@ private struct InnerCompletionRingView: View {
                     clockwise: false
                 )
             }.stroke(lineWidth: ringThickness))
-
+            
             // End cap
             Path { path in
                 path.addArc(
@@ -213,7 +213,7 @@ private struct InnerCompletionRingView: View {
                     transform: CGAffineTransform.identity
                         // Rotate to match the angle of the end cap
                         .translatedBy(x: endPoint.x, y: endPoint.y)
-                        .rotated(by: (endAngle - capAliasingCoverup).radians + .pi)
+                        .rotated(by: endAngle.radians + .pi)
                         .translatedBy(x: -endPoint.x, y: -endPoint.y)
                 )
             }
@@ -298,7 +298,6 @@ struct RingsView_Previews: PreviewProvider {
         
         var body: some View {
             CompletionRingsView(rings: rings, ringThickness: 50, ringSpacing: 3)
-                .background(Color.black)
         }
     }
     
@@ -332,5 +331,6 @@ struct RingsView_Previews: PreviewProvider {
             MultipleRingPreview()
             // AnimatedPreview()
         }
+        .background(Color.black)
     }
 }
