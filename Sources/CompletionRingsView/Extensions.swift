@@ -33,39 +33,26 @@ extension GeometryProxy {
 }
 
 @available(macCatalyst 15.0, iOS 15.0, *)
-extension Color {
-    static func lerp(from: Color, to: Color, value: CGFloat) -> Color {
-        let fromCg = from.cgColor!
-        let toCg = to.cgColor!
-        let fromComponents = fromCg.components!
-        let toComponents = toCg.components!
-        let colorSpace = fromCg.colorSpace!
-        let cappedValue = max(0, min(value, 1))
-        
-        var components: [CGFloat] = .init(repeating: 0, count: colorSpace.numberOfComponents + 1)
-        
-        for i in 0 ..< colorSpace.numberOfComponents + 1 {
-            components[i] = CGFloat.lerp(from: fromComponents[i], to: toComponents[i], value: cappedValue)
-        }
-        
-        return Color(cgColor: CGColor(colorSpace: colorSpace, components: components)!)
-    }
-}
-
-@available(macCatalyst 15.0, iOS 15.0, *)
 extension CGColor {
+    static let extendedSrgb = CGColorSpace(name: CGColorSpace.extendedSRGB)!
+    
     static func lerp(from: CGColor, to: CGColor, value: CGFloat) -> CGColor {
-        let fromComponents = from.components!
-        let toComponents = to.components!
-        let colorSpace = from.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!
-        let cappedValue = max(0, min(value, 1))
+        // Performs the calculations in extended SRGB to match the behavior of the gradient
+        // We convert back to the original color space at the end
         
-        var components: [CGFloat] = .init(repeating: 0, count: colorSpace.numberOfComponents + 1)
+        let fromComponents = from.converted(to: extendedSrgb, intent: .defaultIntent, options: nil)!.components!
+        let toComponents = to.converted(to: extendedSrgb, intent: .defaultIntent, options: nil)!.components!
+        let componentCount = from.numberOfComponents
         
-        for i in 0 ..< colorSpace.numberOfComponents + 1 {
-            components[i] = CGFloat.lerp(from: fromComponents[i], to: toComponents[i], value: cappedValue)
+        let clampedValue = max(0, min(value, 1))
+        var components: [CGFloat] = .init(repeating: 0, count: componentCount)
+        
+        for i in 0 ..< componentCount {
+            components[i] = CGFloat.lerp(from: fromComponents[i], to: toComponents[i], value: clampedValue)
         }
         
-        return CGColor(colorSpace: colorSpace, components: components)!
+        let lerpedColor = CGColor(colorSpace: extendedSrgb, components: components)!
+        
+        return lerpedColor.converted(to: from.colorSpace ?? extendedSrgb, intent: .defaultIntent, options: nil)!
     }
 }
