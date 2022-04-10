@@ -44,6 +44,7 @@ public struct CompletionRingView: View {
         Rectangle()
             .foregroundColor(.clear)
             .modifier(CompletionRingViewModifier(ring: ring, ringThickness: ringThickness))
+            .drawingGroup()
     }
 }
 
@@ -67,6 +68,7 @@ public struct CompletionRingsView: View {
                     .padding(CGFloat(index) * (ringThickness + ringSpacing))
             }
         }
+        .drawingGroup()
     }
 }
 
@@ -229,7 +231,6 @@ private struct InnerCompletionRingView: View {
             }
         }
         .rotationEffect(.degrees(270))
-        .drawingGroup()
     }
 }
 
